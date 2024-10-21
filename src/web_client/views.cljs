@@ -2,24 +2,12 @@
   (:require
    [re-frame.core :as re-frame]
    [web-client.events :as events]
+   [web-client.home :refer [home-panel]]
    [web-client.routes :as routes]
-   [web-client.subs :as subs]
-   ))
+   [web-client.subs :as subs]))
 
 
 ;; home
-
-(defn home-panel []
-  (let [name (re-frame/subscribe [::subs/name])]
-    [:div
-     [:h1
-      (str "Hello from " @name ". This is the Home Page.")]
-
-     [:div
-      [:a {:on-click #(re-frame/dispatch [::events/navigate :about])}
-       "go to About Page"]]
-     ]))
-
 (defmethod routes/panels :home-panel [] [home-panel])
 
 ;; about
