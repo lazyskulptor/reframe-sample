@@ -3,33 +3,38 @@
    [bidi.bidi :as bidi]
    [pushy.core :as pushy]
    [re-frame.core :as re-frame]
-   [web-client.events :as events]))
+   [web-client.events :as events]
+   [web-client.view.shared.navbar]
+   [web-client.view.shared.side-menubar]
+   [web-client.view.panels.home]
+   [web-client.view.panels.analytic]
+   [web-client.view.panels.about]
+   ))
 
-(defmulti panels identity)
-(defmethod panels :default [] [:div "No panel found for this route."])
-
-(def routes
+(def ^:private routes
   (atom
     ["/" {""      :home
-          "about" :about}]))
+          "about" :about
+          "analytics" :analytics
+          }]))
 
-(defn parse
+(defn- parse
   [url]
   (bidi/match-route @routes url))
 
-(defn url-for
+(defn- url-for
   [& args]
   (apply bidi/path-for (into [@routes] args)))
 
-(defn dispatch
+(defn- dispatch
   [route]
   (let [panel (keyword (str (name (:handler route)) "-panel"))]
     (re-frame/dispatch [::events/set-active-panel panel])))
 
-(defonce history
+(defonce ^:private history
   (pushy/pushy dispatch parse))
 
-(defn navigate!
+(defn- navigate!
   [handler]
   (pushy/set-token! history (url-for handler)))
 
