@@ -3,15 +3,15 @@
    [reagent.dom :as rdom]
    [re-frame.core :as re-frame]
    [web-client.events :as events]
-   [web-client.routes :as routes]
    [web-client.subs :as subs]
-   [web-client.views]
+   [web-client.base.layout :refer [panels]]
+   [web-client.routes :as routes]
    [web-client.config :as config]
    ))
 
 (defn- main-panel []
   (let [active-panel (re-frame/subscribe [::subs/active-panel])]
-    (routes/panels @active-panel)))
+    (panels @active-panel)))
 
 (defn dev-setup []
   (when config/debug?

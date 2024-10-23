@@ -1,15 +1,16 @@
-(ns web-client.views
+(ns web-client.view.panels.about
   (:require
    [re-frame.core :as re-frame]
    [web-client.events :as events]
-   [web-client.routes :as routes]
-   [web-client.home]))
+   [web-client.base.layout :as layout]))
 
-;; about
-(defmethod routes/panels :about-panel []
+(defn- panel []
   [:div
    [:h1 "This is the About Page."]
 
    [:div
     [:a {:on-click #(re-frame/dispatch [::events/navigate :home])}
      "go to Home Page"]]])
+
+(defmethod layout/panels :about-panel []
+  [layout/wrapper panel])

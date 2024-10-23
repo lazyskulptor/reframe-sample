@@ -1,9 +1,6 @@
-(ns web-client.home
+(ns web-client.view.panels.analytic
   (:require
-   [web-client.routes :as routes]
-   [web-client.base.layout :refer [wrapper]]
-   [re-frame.core :as re-frame]
-   [web-client.subs :as subs]))
+   [web-client.base.layout :as l]))
 
 (defn general-report []
   [:div
@@ -236,7 +233,7 @@
        [:span {:class "text-red-400"} "% revenue per sale"]
        "in comparison to last month."]]
      [:a {:href "#", :class "btn-shadow mt-6"} "view details"]]
-    [:div {:class ""} [:div {:id "sealsOverview"}]]]
+    [:div {:class ""} [:div#sealsOverview]]]
    (comment "end body")])
 
 (defn numbers []
@@ -467,7 +464,7 @@
         {:class "border border-l-0 border-b-0 border-r-0 px-4 py-2"}
         [:span {:class "num-2"}]
         "minutes ago"]]]]]
-   (comment "End Recent Sales")]
-  (comment "end quick Info"))
+   (comment "End Recent Sales")])
 
-(defmethod routes/panels :home-panel [] [wrapper general-report analytics sales numbers quick-info])
+(defmethod l/panels :analytics-panel []
+  [l/wrapper general-report analytics sales numbers quick-info])
