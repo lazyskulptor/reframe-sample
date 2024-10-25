@@ -3,6 +3,7 @@
    [reagent.dom :as rdom]
    [re-frame.core :as re-frame]
    [day8.re-frame.http-fx]
+   [web-client.events-spec]
    [web-client.events :as events]
    [web-client.subs :as subs]
    [web-client.base.layout :refer [panels]]

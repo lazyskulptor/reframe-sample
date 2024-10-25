@@ -6,8 +6,18 @@
    [day8.re-frame.tracing :refer-macros [fn-traced]]
    ))
 
-(defrecord SigninDTO [username password])
-(defrecord SigninVM [username username-err password-err])
+(defn rest-req 
+  ([path method on-success on-fail] (rest-req path method on-success on-fail nil))
+  ([path method on-success on-fail params]
+  (let [template
+        {:uri (str "" path)
+         :method method
+         :timeout 5000
+         :response-format (ajax/json-response-format {:keywords? true})
+         :on-success on-success
+         :on-failure on-fail}]
+    (when params
+      (assoc template :params params)))))
 
 (reg-event-db
  ::initialize-db
@@ -24,32 +34,31 @@
  (fn-traced [{:keys [db]} [_ active-panel]]
    {:db (assoc db :active-panel active-panel)}))
 
-(defn base-req [path s f]
-  {:uri (str "" path)
-   :timeout 5000
-   :response-format (ajax/json-response-format {:keywords? true})
-   :on-success s
-   :on-failure f})
-
-(defn post-req [params req]
-  (assoc req :method :post :params params))
+;;; Sign in 
+(defn sign-req [username password]
+  (rest-req :signin :post [::signin-response] [::signin-failure]
+            {:username username :password password}))
 
 (reg-event-fx
-  ::signin
-  (fn-traced [{:keys [db]} [_ username password]]
-             {:db (assoc db :is-loading true)
-              :http-xhrio (post-req
-                           (->SigninDTO username password)
-                           (base-req "" [::signin-response] [::signin-failure]))}))
+ ::signin
+ (fn-traced [{:keys [db]} [_ username password]]
+            {:db (assoc db :is-loading true)
+             :http-xhrio (sign-req username password)}))
+
+(defn signin-view [res]
+  (let [vm (:data res)]
+    {:username (:username vm)
+     :username-err (:username-err vm)
+     :password-err (:password-err vm)}))
 
 (reg-event-fx
-  ::signin-response
-  (fn [{:keys [db]} [_ result]]
-    {:db (assoc db :is-loading false :token (:token result))
-     :fx [[:dispatch ::navigate :home]]}))
+ ::signin-response
+ (fn [{:keys [db]} [_ result]]
+   {:db (assoc db :is-loading false :token (:token result))
+    :fx [[:dispatch ::navigate :home]]}))
 
 (reg-event-db
   ::signin-failure
-  (fn [db [_ result]]
-    (assoc db :is-loading false :view-model (map->SigninVM result))))
+  (fn [db [_ res]]
+    (assoc db :is-loading false :view-model (signin-view res))))
 
