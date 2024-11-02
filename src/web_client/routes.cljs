@@ -4,18 +4,18 @@
    [pushy.core :as pushy]
    [re-frame.core :as re-frame]
    [web-client.events :as events]
-   [web-client.view.shared.navbar]
+   [web-client.base.layout]
+   [web-client.view.shared.header]
    [web-client.view.shared.side-menubar]
    [web-client.view.panels.home]
-   [web-client.view.panels.analytic]
    [web-client.view.panels.about]
    ))
 
 (def ^:private routes
   (atom
     ["/" {""      :home
+          "home" :home
           "about" :about
-          "analytics" :analytics
           }]))
 
 (defn- parse

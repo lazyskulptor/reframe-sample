@@ -24,6 +24,24 @@
  (fn-traced [_ _]
    db/default-db))
 
+(reg-event-db
+ ::toggle-sidebar
+ (fn-traced [db _]
+   (assoc-in db [:browser :sidebar] (not (:sidebar (:browser db))))))
+
+(reg-event-db
+ ::toggle-theme
+ (fn-traced [db _]
+            (assoc-in db [:browser :theme]
+                      (let [body (.-body js/document)]
+                      (if (= (:theme (:browser db)) "dark")
+                        (do
+                          (.remove (.-classList body) "theme-dark")
+                          "light")
+                        (do
+                          (.add (.-classList body) "theme-dark")
+                          "dark"))))))
+
 (reg-event-fx
   ::navigate
   (fn-traced [_ [_ handler]]

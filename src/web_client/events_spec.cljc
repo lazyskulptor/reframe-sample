@@ -1,8 +1,8 @@
 (ns web-client.events-spec
   (:require
    [cljs.spec.alpha :as s]
-   [web-client.events :as events])
-  (:use [ajax.interceptors]))
+   [web-client.events :as events]
+   [ajax.interceptors]))
 
 (def rest-methods #{:get :post})
 
