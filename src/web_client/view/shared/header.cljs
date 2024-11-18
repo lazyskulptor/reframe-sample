@@ -2,7 +2,7 @@
   (:require
    [reagent.core :as r]
    [re-frame.core :refer [dispatch subscribe]]
-   [web-client.events :as events]
+   [web-client.events.core :as events]
    [web-client.subs :as subs]
    [web-client.base.layout :as l]))
 

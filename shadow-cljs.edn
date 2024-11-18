@@ -33,7 +33,8 @@
    :dev
    {:compiler-options
     {:closure-defines
-     { re-frame.trace.trace-enabled? true
+     {web-client.config.server-mock? true
+      re-frame.trace.trace-enabled? true
       day8.re-frame.tracing.trace-enabled? true}}}
    :release
    {:build-options

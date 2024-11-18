@@ -1,11 +1,16 @@
 (ns web-client.rest-api-test
   (:require
+   [cljs.test :refer-macros [deftest testing is async]]
    [ajax.core :as ajax]
    [cljs.core.async :refer [go]]
    [cljs.core.async.interop :refer [<p!]]
-   [cljs.test :refer-macros [deftest testing is async]]
    [re-frame.core  :refer [reg-event-db reg-event-fx reg-sub dispatch-sync reg-sub subscribe]]
-   [web-client.events :as events]
+   [cljs.spec.test.alpha :as stest]
+   [clojure.test.check.generators]
+   [clojure.test.check]
+   [clojure.test.check.properties]
+   [web-client.events.core :as events]
+   [web-client.events.core-spec]
    [web-client.test-utils :refer [wait]]))
 
 (defn http-handler [{:keys [db]} _]
@@ -39,6 +44,9 @@
  (fn [db _]
    (:is-loading db)))
 
+(deftest auto-tests
+  (testing "generated"
+    (is (stest/check `events/rest-req))))
 
 (deftest http-test
   (testing "public api test"

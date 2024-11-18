@@ -7,5 +7,5 @@
   (shadow/watch :app)
   (shadow/watch :browser-test)
   (shadow/watch :karma-test)
-  (let [pr (-> (Runtime/getRuntime) (.exec "npx gulp"))]
+  (let [pr (-> (Runtime/getRuntime) (.exec "npm run tailwind"))]
     (-> pr .getInputStream (.transferTo System/out))))

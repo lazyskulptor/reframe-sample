@@ -1,4 +1,4 @@
-(ns web-client.events
+(ns web-client.events.core
   (:require
    [re-frame.core :refer [reg-event-db reg-event-fx]]
    [ajax.core :as ajax]
@@ -16,8 +16,9 @@
          :response-format (ajax/json-response-format {:keywords? true})
          :on-success on-success
          :on-failure on-fail}]
-    (when params
-      (assoc template :params params)))))
+    (if params
+      (assoc template :params params)
+      template))))
 
 (reg-event-db
  ::initialize-db
@@ -51,32 +52,4 @@
  ::set-active-panel
  (fn-traced [{:keys [db]} [_ active-panel]]
    {:db (assoc db :active-panel active-panel)}))
-
-;;; Sign in 
-(defn sign-req [username password]
-  (rest-req :signin :post [::signin-response] [::signin-failure]
-            {:username username :password password}))
-
-(reg-event-fx
- ::signin
- (fn-traced [{:keys [db]} [_ username password]]
-            {:db (assoc db :is-loading true)
-             :http-xhrio (sign-req username password)}))
-
-(defn signin-view [res]
-  (let [vm (:data res)]
-    {:username (:username vm)
-     :username-err (:username-err vm)
-     :password-err (:password-err vm)}))
-
-(reg-event-fx
- ::signin-response
- (fn [{:keys [db]} [_ result]]
-   {:db (assoc db :is-loading false :token (:token result))
-    :fx [[:dispatch ::navigate :home]]}))
-
-(reg-event-db
-  ::signin-failure
-  (fn [db [_ res]]
-    (assoc db :is-loading false :view-model (signin-view res))))
 

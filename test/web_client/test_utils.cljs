@@ -1,4 +1,5 @@
-(ns web-client.test-utils)
+(ns web-client.test-utils
+  (:require-macros [web-client.test-utils]))
 
 (def counter
   ((fn []
